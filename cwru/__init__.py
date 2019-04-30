@@ -9,7 +9,7 @@ from scipy.io import loadmat
 
 class CWRU:
 
-    def __init__(self, exp, rpm, length):
+    def __init__(self, exp, rpm, length, test_ratio=0.25):
         if exp not in ('12DriveEndFault', '12FanEndFault', '48DriveEndFault'):
             print(f"wrong experiment name: {exp}")
             exit(1)
@@ -28,6 +28,7 @@ class CWRU:
                 lines.append(l)
 
         self.length = length  # sequence length
+        self.test_ratio = test_ratio # ratio of testing set
         self._load_and_slice_data(rdir, lines)
         # shuffle training and test arrays
         self._shuffle()
@@ -62,14 +63,19 @@ class CWRU:
                 self._download(fpath, info[3].rstrip('\n'))
 
             mat_dict = loadmat(fpath)
+            # print(mat_dict.keys())
             key = list(filter(lambda x: 'DE_time' in x, mat_dict.keys()))[0]
             time_series = mat_dict[key][:, 0]
+
+            print(f"Shape of timeseries file {info[2] + '.mat'}: {time_series.shape}")
 
             idx_last = -(time_series.shape[0] % self.length)
             clips = time_series[:idx_last].reshape(-1, self.length)
 
             n = clips.shape[0]
-            n_split = 3 * n // 4
+            # Default: 75% for training, 25% for testing
+            # n_split = 3 * n // 4
+            n_split = int(n * (1 - self.test_ratio))
             self.X_train = np.vstack((self.X_train, clips[:n_split]))
             self.X_test = np.vstack((self.X_test, clips[n_split:]))
             self.y_train += [idx] * n_split
