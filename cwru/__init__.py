@@ -67,9 +67,10 @@ class CWRU:
             key = list(filter(lambda x: 'DE_time' in x, mat_dict.keys()))[0]
             time_series = mat_dict[key][:, 0]
 
-            print(f"Shape of timeseries file {info[2] + '.mat'}: {time_series.shape}")
+            print(f"Shape of timeseries file {info[2] + '.mat'}: {time_series.shape}, Label: {idx}")
 
             idx_last = -(time_series.shape[0] % self.length)
+            # Reshape into target size of time series samples
             clips = time_series[:idx_last].reshape(-1, self.length)
 
             n = clips.shape[0]
