@@ -21,6 +21,8 @@ The constructor of class ``cwru.CWRU`` has three arguments:
 * **exp**: experiment, supporting ``"12DriveEndFault", "12FanEndFault", "48DriveEndFault"``
 * **rpm**: rpm during testing
 * **length**: length of the signal slice, namely ``X_train.shape[1]``
+* **test_ratio**: ratio of testing set, the default is 0.25 (25 % of dataset).
+* **shuffle**: whether to shuffle the rows. (default: True)
 
 Install
 -------

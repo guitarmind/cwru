@@ -9,7 +9,7 @@ from scipy.io import loadmat
 
 class CWRU:
 
-    def __init__(self, exp, rpm, length, test_ratio=0.25):
+    def __init__(self, exp, rpm, length, test_ratio=0.25, shuffle=True):
         if exp not in ('12DriveEndFault', '12FanEndFault', '48DriveEndFault'):
             print(f"wrong experiment name: {exp}")
             exit(1)
@@ -29,6 +29,7 @@ class CWRU:
 
         self.length = length  # sequence length
         self.test_ratio = test_ratio # ratio of testing set
+        self.shuffle = shuffle
         self._load_and_slice_data(rdir, lines)
         # shuffle training and test arrays
         self._shuffle()
@@ -85,12 +86,14 @@ class CWRU:
     def _shuffle(self):
         # shuffle training samples
         index = list(range(self.X_train.shape[0]))
-        random.Random(0).shuffle(index)
+        if self.shuffle:
+            random.Random(0).shuffle(index)
         self.X_train = self.X_train[index]
         self.y_train = np.array(tuple(self.y_train[i] for i in index))
 
         # shuffle test samples
         index = list(range(self.X_test.shape[0]))
-        random.Random(0).shuffle(index)
+        if self.shuffle:
+            random.Random(0).shuffle(index)
         self.X_test = self.X_test[index]
         self.y_test = np.array(tuple(self.y_test[i] for i in index))
