@@ -16,8 +16,11 @@ class CWRU:
         if rpm not in ('1797', '1772', '1750', '1730'):
             print(f"wrong rpm value: {rpm}")
             exit(1)
+
         # root directory of all data
         rdir = os.path.join(os.path.expanduser('~'), 'Datasets/CWRU')
+        if not os.path.exists(rdir):
+            os.makedirs(rdir)
 
         fmeta = os.path.join(os.path.dirname(__file__), 'metadata.txt')
         all_lines = open(fmeta).readlines()
