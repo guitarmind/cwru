@@ -9,7 +9,7 @@ from scipy.io import loadmat
 
 class CWRU:
 
-    def __init__(self, exp, rpm, length, test_ratio=0.25, shuffle=True):
+    def __init__(self, exp, rpm, length, test_ratio=0.25, shuffle=True, dataset_folder="~/Datasets/CWRU"):
         if exp not in ('12DriveEndFault', '12FanEndFault', '48DriveEndFault'):
             print(f"wrong experiment name: {exp}")
             exit(1)
@@ -18,9 +18,8 @@ class CWRU:
             exit(1)
 
         # root directory of all data
-        rdir = os.path.join(os.path.expanduser('~'), 'Datasets/CWRU')
-        if not os.path.exists(rdir):
-            os.makedirs(rdir)
+        if not os.path.exists(dataset_folder):
+            os.makedirs(dataset_folder)
 
         fmeta = os.path.join(os.path.dirname(__file__), 'metadata.txt')
         all_lines = open(fmeta).readlines()
@@ -33,7 +32,7 @@ class CWRU:
         self.length = length  # sequence length
         self.test_ratio = test_ratio # ratio of testing set
         self.shuffle = shuffle
-        self._load_and_slice_data(rdir, lines)
+        self._load_and_slice_data(dataset_folder, lines)
         # shuffle training and test arrays
         self._shuffle()
         self.labels = tuple(line[2] for line in lines)

@@ -23,6 +23,7 @@ The constructor of class ``cwru.CWRU`` has three arguments:
 * **length**: length of the signal slice, namely ``X_train.shape[1]``
 * **test_ratio**: ratio of testing set, the default is 0.25 (25 % of dataset).
 * **shuffle**: whether to shuffle the rows. (default: True)
+* **dataset_folder**: The folder path of downloaded dataset files. (default: ~/Datasets/CWRU)
 
 Install
 -------
